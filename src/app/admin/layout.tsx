@@ -1,14 +1,29 @@
 "use client";
 
 import Sidebar from "@/components/Sidebar";
-import { usePathname } from "next/navigation";
+import api from "@/services/api";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
+  const router = useRouter();
+
+  useEffect(() => {
+    const getUserData = async () => {
+      try {
+        await api.get("/admin");
+      } catch (error) {
+        console.error(error);
+        router.push("/auth/login");
+      }
+    };
+
+    getUserData();
+  }, []);
 
   return (
     <div className="flex min-h-screen bg-gray-100">

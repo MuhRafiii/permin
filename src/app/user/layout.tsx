@@ -26,6 +26,7 @@ export default function UserLayout({
         }
       } catch (error) {
         console.error(error);
+        router.push("/auth/login");
       } finally {
         setLoading(false);
       }
