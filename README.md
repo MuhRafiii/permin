@@ -35,6 +35,20 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
+## Backend
+
+run backend:
+
+```bash
+cd library-backend
+
+# seeding admin
+npm run seed
+
+# run server
+npm run start
+```
+
 backend: Express + Typescript
 database: supabase
 
@@ -62,6 +76,7 @@ CONSTRAINT books_category_id_fkey FOREIGN KEY (category_id) REFERENCES public.ca
 CONSTRAINT books_borrowed_by_fkey FOREIGN KEY (borrowed_by) REFERENCES public.users(id),
 CONSTRAINT books_reserved_by_fkey FOREIGN KEY (reserved_by) REFERENCES public.users(id)
 );
+
 CREATE TABLE public.borrowings (
 id uuid NOT NULL DEFAULT uuid_generate_v4(),
 user_id uuid,
@@ -73,11 +88,13 @@ CONSTRAINT borrowings_pkey PRIMARY KEY (id),
 CONSTRAINT borrowings_book_id_fkey FOREIGN KEY (book_id) REFERENCES public.books(id),
 CONSTRAINT borrowings_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id)
 );
+
 CREATE TABLE public.categories (
 id uuid NOT NULL DEFAULT uuid_generate_v4(),
 name text NOT NULL,
 CONSTRAINT categories_pkey PRIMARY KEY (id)
 );
+
 CREATE TABLE public.favorites (
 id uuid NOT NULL DEFAULT uuid_generate_v4(),
 user_id uuid,
@@ -86,6 +103,7 @@ CONSTRAINT favorites_pkey PRIMARY KEY (id),
 CONSTRAINT favorites_book_id_fkey FOREIGN KEY (book_id) REFERENCES public.books(id),
 CONSTRAINT favorites_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id)
 );
+
 CREATE TABLE public.users (
 id uuid NOT NULL DEFAULT uuid_generate_v4(),
 name text NOT NULL,
