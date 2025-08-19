@@ -2,8 +2,8 @@
 
 # dependencies
 /node_modules
-/library-backend/node_modules
-/library-backend/.env
+/backend/node_modules
+/backend/.env
 /.pnp
 .pnp.*
 .yarn/*

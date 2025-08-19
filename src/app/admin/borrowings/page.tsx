@@ -45,11 +45,15 @@ export default function AdminBorrowings() {
 
             {/* Info */}
             <div className="w-full flex sm:flex-col sm:gap-6">
-              <div className="flex flex-col sm:flex-row sm:gap-2 items-center w-full">
-                <h2 className="text-lg font-semibold">{borrow.books.title}</h2>
-                <p className="text-gray-500 text-sm">
-                  Category: {borrow.books.categories.name}
-                </p>
+              <div className="flex justify-between items-center">
+                <div className="flex flex-col w-full">
+                  <h2 className="text-lg font-semibold">
+                    {borrow.books.title}
+                  </h2>
+                  <p className="text-gray-500 text-sm">
+                    Category: {borrow.books.categories.name}
+                  </p>
+                </div>
                 <p
                   className={`px-3 py-0.5 rounded-full text-xs w-fit ${
                     borrow.status === "returned"
