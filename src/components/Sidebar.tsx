@@ -23,7 +23,7 @@ export default function Sidebar() {
       if (result.isConfirmed) {
         try {
           await api.post("/auth/logout");
-          router.push("/auth/login");
+          router.push("/user");
 
           Swal.fire({
             title: "Logout Successful",

@@ -5,23 +5,17 @@ export const getBooks = async (req: Request, res: Response) => {
   try {
     const userId = req.user?.id;
 
-    const {
-      status,
-      category,
-      sortBy,
-      search,
-      favorite,
-      page = 1,
-      limit = 12,
-    } = req.query;
+    const { status, category, sortBy, search, favorite, page, limit } =
+      req.query;
 
-    let query = supabase
-      .from("books")
-      .select(`*, categories(name)`)
-      .range(
+    let query = supabase.from("books").select(`*, categories(name)`);
+
+    if (page && limit) {
+      query = query.range(
         (Number(page) - 1) * Number(limit),
         Number(page) * Number(limit) - 1
       );
+    }
 
     if (status) {
       query = query.eq("status", status);
