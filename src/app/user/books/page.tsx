@@ -51,6 +51,7 @@ export default function BooksPage() {
           sortBy,
           search,
           page: String(page),
+          limit: "12",
         },
       });
       setBooks(res.data.sortedBooks || []);

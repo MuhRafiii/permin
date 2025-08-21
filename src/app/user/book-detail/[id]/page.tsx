@@ -1,5 +1,6 @@
 "use client";
 
+import ChatbotModal from "@/components/ChatbotBookDetail";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -183,6 +184,8 @@ export default function BookDetailPage() {
               >
                 Borrow Book
               </Button>
+
+              <ChatbotModal bookTitle={book.title}></ChatbotModal>
             </div>
           </CardContent>
         </Card>

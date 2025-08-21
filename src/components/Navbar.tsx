@@ -18,6 +18,7 @@ export default function Navbar({ isLoggedIn, onLogout }: NavbarProps) {
   const publicLinks = [
     { label: "Home", href: "/user" },
     { label: "Books", href: "/user/books" },
+    { label: "Persist", href: "/user/persist" },
   ];
 
   const userLinks = [
@@ -32,7 +33,7 @@ export default function Navbar({ isLoggedIn, onLogout }: NavbarProps) {
     <nav className="bg-white shadow-md">
       <div className="container mx-auto flex items-center justify-between py-4 px-6">
         {/* Logo */}
-        <div className="text-lg font-bold text-gray-800">📚 Permin</div>
+        <div className="text-lg font-bold text-gray-800">📚 PERMIN</div>
 
         {/* Desktop Menu */}
         <div className="hidden lg:flex items-center gap-6 text-gray-500 font-semibold">
