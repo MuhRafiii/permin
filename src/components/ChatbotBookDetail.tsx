@@ -110,7 +110,7 @@ export default function ChatbotModal({ bookTitle }: { bookTitle: string }) {
                 className={`max-w-[80%] px-3 py-2 rounded-lg text-base ${
                   msg.role === "user"
                     ? "ml-auto bg-gray-900 text-white"
-                    : "mr-auto bg-gray-200 text-gray-900"
+                    : "mr-auto bg-gray-200 text-gray-900 whitespace-pre-line"
                 }`}
               >
                 {/* tampilkan gambar jika ada */}

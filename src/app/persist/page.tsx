@@ -62,6 +62,11 @@ export default function ChatPage() {
     try {
       let aiResponse = "";
 
+      // Buat history percakapan (user + ai)
+      const conversationHistory = [...messages, newMessage]
+        .map((m) => `${m.role === "user" ? "User" : "AI"}: ${m.text || ""}`)
+        .join("\n");
+
       // cek apakah pertanyaan terkait buku
       const isBookQuery =
         input.toLowerCase().includes("buku") ||
@@ -73,21 +78,30 @@ export default function ChatPage() {
         const res = await api.get("/books"); // asumsi endpoint GET /books
         const books = res.data.sortedBooks;
         const bookList = books
-          .map((b: any) => `${b.title} oleh ${b.author} (${b.categories.name})`)
+          .map(
+            (b: any) => `- ${b.title} oleh ${b.author} (${b.categories.name})`
+          )
           .join("\n");
 
         const prompt = `
-          Pertanyaan user: ${input}
+          Ini adalah percakapan antara User dan AI Pustakawan:
 
-          Ini adalah list buku yang tersedia pada library kita:
+          ${conversationHistory}
+
+          User baru bertanya: "${input}"
+
+          📚 Berikut daftar buku yang tersedia di library:
           ${bookList}
 
-          Jawab pertanyaan dari user hanya berdasarkan buku-buku yang tersedia di atas.
-        `;
+          ⚠️ Aturan menjawab:
+          1. Jawablah **hanya berdasarkan daftar buku di atas**.
+          2. Jika user meminta daftar, tampilkan dengan format bullet point agar rapi.
+          3. Jika user minta rekomendasi, jelaskan alasan singkat kenapa buku itu relevan.
+          4. Jangan menyebutkan buku lain yang tidak ada di daftar.
+          `;
 
         const result = await gemini.generateContent(prompt);
-        const response = await result.response;
-        aiResponse = response.text();
+        aiResponse = result.response.text();
       } else {
         // percakapan umum (bisa gambar juga)
         let ocrText = "";
@@ -106,7 +120,18 @@ export default function ChatPage() {
           finalPrompt = input;
         }
 
-        finalPrompt = `Kamu adalah pustakawan yang ramah. Jawab seolah membantu siswa SMA.\n\n${finalPrompt}`;
+        finalPrompt = `
+          Ini adalah percakapan antara User dan AI Pustakawan:
+
+          ${conversationHistory}
+
+          User baru bertanya: "${input}"
+
+          Jawablah sebagai AI Pustakawan yang ramah, 
+          jelaskan seolah membantu siswa SMA. Gunakan paragraf singkat atau bullet point agar rapi.
+
+          ${finalPrompt}
+          `;
 
         const result = await gemini.generateContent(finalPrompt);
         aiResponse = result.response.text() || "No result";
@@ -123,15 +148,6 @@ export default function ChatPage() {
       setLoading(false);
     }
   };
-
-  // helper convert image ke base64
-  const toBase64 = (file: File): Promise<string> =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve((reader.result as string).split(",")[1]);
-      reader.onerror = (error) => reject(error);
-    });
 
   return (
     <div className="max-w-2xl mx-auto p-6 space-y-4">
@@ -150,7 +166,7 @@ export default function ChatPage() {
             {msg.image && (
               <img src={msg.image} alt="uploaded" className="w-12 rounded-lg" />
             )}
-            {msg.text && <p>{msg.text}</p>}
+            {msg.text && <p className="whitespace-pre-line">{msg.text}</p>}
           </div>
         ))}
         {loading && <p className="text-gray-500">⏳ Thinking...</p>}
