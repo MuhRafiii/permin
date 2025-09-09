@@ -4,6 +4,7 @@ import ChatbotModal from "@/components/ChatbotBookDetail";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useAuth } from "@/contexts/AuthContext";
 import api from "@/services/api";
 import { Star } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
@@ -14,9 +15,19 @@ export default function BookDetailPage() {
   const params = useParams();
   const id = params.id;
   const [book, setBook] = useState<any>(null);
-  const [favoriteCount, setFavoriteCount] = useState(0);
-  const [isFavorite, setIsFavorite] = useState(false);
+  const { user } = useAuth();
   const router = useRouter();
+
+  if (user?.role === "admin") {
+    router.push("/admin");
+    Swal.fire({
+      icon: "error",
+      title: "Failed",
+      text: "You have to logout for guest access.",
+      confirmButtonColor: "#d33",
+    });
+    return;
+  }
 
   const fetchBook = async () => {
     try {
@@ -25,8 +36,6 @@ export default function BookDetailPage() {
       console.log(res);
 
       setBook(data);
-      setFavoriteCount(data.favoriteCount);
-      setIsFavorite(data.isFavorite);
     } catch (err) {
       console.error(err);
     }
@@ -109,14 +118,19 @@ export default function BookDetailPage() {
     }
   };
 
-  if (!book) return <p className="text-center mt-10">Book not found</p>;
+  if (!book)
+    return (
+      <p className="h-screen flex items-center justify-center text-center mt-10">
+        Book not found
+      </p>
+    );
 
   return (
     <>
       <div className="container mx-auto p-4 sm:p-6 lg:p-10">
         <Button
           variant="outline"
-          onClick={() => router.push("/user/books")}
+          onClick={() => router.push("/books")}
           className="mb-4"
         >
           ← Back to Books
@@ -160,7 +174,7 @@ export default function BookDetailPage() {
               <div className="text-sm text-gray-500">{book.status}</div>
             </div>
 
-            <p className="mb-6">{book.description}</p>
+            <p className="mb-6 text-justify">{book.description}</p>
 
             {/* Favorite & Pinjam */}
             <div className="flex items-center gap-4">

@@ -7,27 +7,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useAuth } from "@/contexts/AuthContext";
 import api from "@/services/api";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
 export default function AdminDashboard() {
-  const [user, setUser] = useState<any>(null);
   const [books, setBooks] = useState<any[]>([]);
   const [status, setStatus] = useState("reserved");
-
-  useEffect(() => {
-    const getUserData = async () => {
-      try {
-        const res = await api.get("/admin");
-        setUser(res.data.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    getUserData();
-  }, []);
+  const { user } = useAuth();
 
   const fetchBooks = async () => {
     try {
@@ -119,7 +107,7 @@ export default function AdminDashboard() {
         <div className="space-y-4">
           <div className="bg-white p-4 rounded shadow">
             <p>
-              <strong>Name:</strong> {user.user_metadata.name}
+              <strong>Name:</strong> {user.name}
             </p>
             <p>
               <strong>Email:</strong> {user.email}
@@ -140,22 +128,27 @@ export default function AdminDashboard() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {books.map((book) => (
-              <div key={book.id} className="bg-white p-4 rounded-md shadow">
+              <div
+                key={book.id}
+                className="bg-white p-4 rounded-md shadow space-y-2"
+              >
                 <img
                   src={book.image}
                   alt={book.title}
-                  className="mb-2 w-full h-40 object-cover"
+                  className="mb-2 w-full h-96 object-cover"
                 />
                 <h2 className="font-semibold">{book.title}</h2>
-                <p className="text-sm text-gray-400">
-                  {status === "reserved" ? "Reserved by" : "Borrowed by"}:{" "}
-                  {book.user}
-                </p>
-                <p className="text-sm text-gray-400">
-                  {status === "reserved"
-                    ? `Reserved at: ${formatDate(book.reserved_at)}`
-                    : `Borrowed at: ${formatDate(book.borrowed_at)}`}
-                </p>
+                <div className="text-sm text-gray-400">
+                  <p>
+                    {status === "reserved" ? "Reserved by" : "Borrowed by"}:{" "}
+                    {book.user}
+                  </p>
+                  <p>
+                    {status === "reserved"
+                      ? `Reserved at: ${formatDate(book.reserved_at)}`
+                      : `Borrowed at: ${formatDate(book.borrowed_at)}`}
+                  </p>
+                </div>
                 {status === "reserved" ? (
                   <button
                     onClick={() => approveBorrowing(book.id, book.reserved_by)}

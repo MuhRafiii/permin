@@ -45,73 +45,75 @@ export default function RegisterPage() {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="max-w-xs sm:max-w-md mx-auto mt-10 p-6 border rounded-md shadow-md space-y-4 sm:space-y-6"
-    >
-      <h1 className="text-2xl sm:text-3xl font-semibold text-center">
-        Register
-      </h1>
+    <div className="min-h-screen">
+      <form
+        onSubmit={handleSubmit}
+        className="max-w-xs sm:max-w-md bg-white mx-auto mt-10 p-6 border rounded-md shadow-md space-y-4 sm:space-y-6"
+      >
+        <h1 className="text-2xl sm:text-3xl font-semibold text-center">
+          Register
+        </h1>
 
-      <div className="space-y-1 sm:space-y-2">
-        <Label htmlFor="name" className="text-sm sm:text-base">
-          Name
-        </Label>
-        <Input
-          id="name"
-          type="text"
-          name="name"
-          placeholder="Your name"
-          value={form.name}
-          onChange={handleChange}
-          className="text-sm sm:text-base"
-          required
-        />
-      </div>
+        <div className="space-y-1 sm:space-y-2">
+          <Label htmlFor="name" className="text-sm sm:text-base">
+            Name
+          </Label>
+          <Input
+            id="name"
+            type="text"
+            name="name"
+            placeholder="Your name"
+            value={form.name}
+            onChange={handleChange}
+            className="text-sm sm:text-base"
+            required
+          />
+        </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="email" className="text-sm sm:text-base">
-          Email
-        </Label>
-        <Input
-          id="email"
-          type="email"
-          name="email"
-          placeholder="you@example.com"
-          value={form.email}
-          onChange={handleChange}
-          className="text-sm sm:text-base"
-          required
-        />
-      </div>
+        <div className="space-y-2">
+          <Label htmlFor="email" className="text-sm sm:text-base">
+            Email
+          </Label>
+          <Input
+            id="email"
+            type="email"
+            name="email"
+            placeholder="you@example.com"
+            value={form.email}
+            onChange={handleChange}
+            className="text-sm sm:text-base"
+            required
+          />
+        </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="password" className="text-sm sm:text-base">
-          Password
-        </Label>
-        <Input
-          id="password"
-          type="password"
-          name="password"
-          placeholder="Your password"
-          value={form.password}
-          onChange={handleChange}
-          className="text-sm sm:text-base"
-          required
-        />
-        {error && <p className="text-sm text-red-600 text-center">{error}</p>}
-      </div>
+        <div className="space-y-2">
+          <Label htmlFor="password" className="text-sm sm:text-base">
+            Password
+          </Label>
+          <Input
+            id="password"
+            type="password"
+            name="password"
+            placeholder="Your password"
+            value={form.password}
+            onChange={handleChange}
+            className="text-sm sm:text-base"
+            required
+          />
+          {error && <p className="text-sm text-red-600 text-center">{error}</p>}
+        </div>
 
-      <Button type="submit" disabled={loading} className="w-full">
-        {loading ? "Registering..." : "Register"}
-      </Button>
+        <Button type="submit" disabled={loading} className="w-full">
+          {loading ? "Registering..." : "Register"}
+        </Button>
 
-      <p className="text-center text-sm text-muted-foreground">
-        Already have an account?{" "}
-        <a href="/auth/login" className="text-blue-500 hover:underline">
-          Login
-        </a>
-      </p>
-    </form>
+        <p className="text-center text-sm text-muted-foreground">
+          Already have an account?{" "}
+          <a href="/auth/login" className="text-blue-500 hover:underline">
+            Login
+          </a>
+        </p>
+      </form>
+    </div>
   );
 }

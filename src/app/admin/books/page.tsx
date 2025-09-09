@@ -62,6 +62,15 @@ export default function BooksPage() {
   const handleSubmit = async (formData: FormData) => {
     try {
       if (editData) {
+        Swal.fire({
+          title: "Updating book...",
+          text: "Wait a moment...",
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+          },
+        });
+
         await api.put(
           `/books/edit/${books.find((b) => b.title === editData.title)?.id}`,
           formData,
@@ -69,6 +78,9 @@ export default function BooksPage() {
             headers: { "Content-Type": "multipart/form-data" },
           }
         );
+
+        Swal.close();
+
         Swal.fire({
           icon: "success",
           title: "Book updated successfully",

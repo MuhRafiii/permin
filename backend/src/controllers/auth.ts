@@ -35,18 +35,22 @@ export async function register(req: Request, res: Response) {
         .json({ code: 400, status: "error", message: authError.message });
     }
 
-    const { error } = await supabase
+    const { data: userData, error: errorUser } = await supabase
       .from("users")
-      .insert([{ id: authData.user?.id, email, name }]);
+      .insert([{ id: authData.user?.id, email, name }])
+      .select()
+      .single();
 
-    if (error) {
-      throw new Error(error.message);
+    if (errorUser) {
+      throw new Error(errorUser.message);
     }
 
     return res.status(201).json({
       code: 201,
       status: "success",
       message: "User registered successfully",
+      userData,
+      authData,
     });
   } catch (err: any) {
     console.error("Unexpected error:", err);
@@ -81,6 +85,16 @@ export const login = async (req: Request, res: Response) => {
         .json({ code: 401, status: "error", message: error.message });
     }
 
+    const { data: user, error: userError } = await supabase
+      .from("users")
+      .select("*")
+      .eq("id", data.user.id)
+      .single();
+
+    if (userError) {
+      throw new Error(userError.message);
+    }
+
     const session = data.session;
     if (!session) {
       throw new Error("Failed to get session");
@@ -97,7 +111,7 @@ export const login = async (req: Request, res: Response) => {
       code: 200,
       status: "success",
       message: "Login successful",
-      user: data.user,
+      user,
     });
   } catch (err: any) {
     return res

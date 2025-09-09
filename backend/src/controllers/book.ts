@@ -301,7 +301,7 @@ export const reserveBook = async (req: Request, res: Response) => {
       return res.status(400).json({
         code: 400,
         status: "error",
-        message: "You have to return the book first that you borrowed",
+        message: "You have to return the book that you borrowed first",
       });
     }
 

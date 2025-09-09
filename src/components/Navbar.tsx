@@ -16,24 +16,30 @@ export default function Navbar({ isLoggedIn, onLogout }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const publicLinks = [
-    { label: "Home", href: "/user" },
-    { label: "Books", href: "/user/books" },
-    { label: "Persist", href: "/user/persist" },
+    { label: "Home", href: "/" },
+    { label: "Books", href: "/books" },
+    { label: "Persist", href: "/persist" },
   ];
 
   const userLinks = [
     ...publicLinks,
-    { label: "My Favorite", href: "/user/favorites" },
-    { label: "Borrowing & History", href: "/user/borrowings" },
+    { label: "My Favorite", href: "/favorites" },
+    { label: "Borrowing & History", href: "/borrowings" },
   ];
 
   const links = isLoggedIn ? userLinks : publicLinks;
 
   return (
-    <nav className="bg-white shadow-md">
+    <nav className="bg-white shadow-lg fixed top-0 left-0 w-full z-50">
       <div className="container mx-auto flex items-center justify-between py-4 px-6">
         {/* Logo */}
-        <div className="text-lg font-bold text-gray-800">📚 PERMIN</div>
+        <div className="text-lg font-bold text-gray-800">
+          <img
+            src="https://res.cloudinary.com/dxlevzn3n/image/upload/v1757307336/permin_ixolw6.jpg"
+            alt="logo"
+            className="w-10 h-10 rounded-full"
+          />
+        </div>
 
         {/* Desktop Menu */}
         <div className="hidden lg:flex items-center gap-6 text-gray-500 font-semibold">
@@ -49,7 +55,7 @@ export default function Navbar({ isLoggedIn, onLogout }: NavbarProps) {
             </Link>
           ))}
           {isLoggedIn ? (
-            <Button size="sm" variant="outline" onClick={onLogout}>
+            <Button size="sm" variant="destructive" onClick={onLogout}>
               Logout
             </Button>
           ) : (

@@ -1,12 +1,28 @@
 "use client";
 
 import { BorrowingCard } from "@/components/UserBorrowingCard";
+import { useAuth } from "@/contexts/AuthContext";
 import api from "@/services/api";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 
 export default function UserBorrowings() {
   const [borrowings, setBorrowings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
+  const router = useRouter();
+
+  if (user?.role === "admin") {
+    router.push("/admin");
+    Swal.fire({
+      icon: "error",
+      title: "Failed",
+      text: "You have to login as a user to access this page.",
+      confirmButtonColor: "#d33",
+    });
+    return;
+  }
 
   useEffect(() => {
     const fetchBorrowings = async () => {
@@ -22,15 +38,15 @@ export default function UserBorrowings() {
     fetchBorrowings();
   }, []);
 
-  if (loading) {
-    return <p className="text-center text-gray-400 mt-10">Loading...</p>;
-  }
-
   const currentBorrowings = borrowings.filter((b) => b.returned_at === null);
   const historyBorrowings = borrowings.filter((b) => b.returned_at !== null);
 
   return (
     <div className="p-4 lg:p-8">
+      {loading && (
+        <p className="h-screen text-center text-gray-400 mt-10">Loading...</p>
+      )}
+
       {/* Buku yang sedang dipinjam */}
       <section className="mb-10">
         <h1 className="text-2xl font-bold mb-6 text-center lg:text-left">

@@ -1,47 +1,13 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import api from "@/services/api";
+import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import Swal from "sweetalert2";
 
 export default function Sidebar() {
   const router = useRouter();
-
-  const logout = async () => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You will be logged out.",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "Yes, logout",
-      cancelButtonText: "Cancel",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          await api.post("/auth/logout");
-          router.push("/user");
-
-          Swal.fire({
-            title: "Logout Successful",
-            text: "You have been logged out.",
-            icon: "success",
-            timer: 2000,
-            showConfirmButton: false,
-          });
-        } catch (err: any) {
-          Swal.fire({
-            title: "Logout Failed",
-            text: err.response?.data?.message || "Failed to log out.",
-            icon: "error",
-          });
-        }
-      }
-    });
-  };
+  const { logout } = useAuth();
 
   return (
     <aside className="fixed top-0 left-0 h-screen w-64 bg-white shadow-lg flex flex-col overflow-y-auto">

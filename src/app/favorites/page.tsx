@@ -9,6 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useAuth } from "@/contexts/AuthContext";
 import api from "@/services/api";
 import { Star } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -19,7 +20,19 @@ export default function BooksPage() {
   const [books, setBooks] = useState<any[]>([]);
   const [page, setPage] = useState<number>(1);
   const favorite = true;
+  const { user } = useAuth();
   const router = useRouter();
+
+  if (user?.role === "admin") {
+    router.push("/admin");
+    Swal.fire({
+      icon: "error",
+      title: "Failed",
+      text: "You have to login as a user to access this page.",
+      confirmButtonColor: "#d33",
+    });
+    return;
+  }
 
   const fetchBooks = async () => {
     try {
@@ -172,7 +185,7 @@ export default function BooksPage() {
             </div>
           </>
         ) : (
-          <p className="text-gray-500 text-center p-10">
+          <p className="h-screen text-gray-500 text-center p-10">
             You have no favorite books
           </p>
         )}

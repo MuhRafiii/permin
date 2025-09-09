@@ -14,7 +14,7 @@ export const storage = new CloudinaryStorage({
   cloudinary,
   params: async (req, file) => ({
     folder: "permin-app-images",
-    allowed_formats: ["jpg", "png", "jpeg", "JPG"],
+    allowed_formats: ["jpg", "png", "jpeg", "JPG", "avif", "webp"],
     transformation: [{ width: 800, height: 800, crop: "limit" }],
   }),
 });

@@ -75,7 +75,7 @@ export const returningBook = async (req: Request, res: Response) => {
     const { user_id, book_id } = req.body;
     const { data, error } = await supabase
       .from("borrowings")
-      .update({ returned_at: new Date() })
+      .update({ status: "returned", returned_at: new Date() })
       .eq("user_id", user_id)
       .eq("book_id", book_id)
       .is("returned_at", null)

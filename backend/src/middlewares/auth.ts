@@ -57,21 +57,7 @@ export const isLogin = async (
       data: { user },
     } = await supabase.auth.getUser(token);
 
-    const { data } = await supabase
-      .from("users")
-      .select("role")
-      .eq("id", user?.id)
-      .single();
-
-    if (data?.role === "admin") {
-      return res.status(401).json({
-        code: 401,
-        status: "error",
-        message: "Forbidden",
-      });
-    }
-
-    req.user = user ? user : null;
+    req.user = user;
 
     next();
   } catch (err) {

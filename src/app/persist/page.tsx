@@ -4,10 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { useAuth } from "@/contexts/AuthContext";
 import { gemini } from "@/lib/gemini";
 import api from "@/services/api";
 import { ImageIcon, Send } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import Swal from "sweetalert2";
 import Tesseract from "tesseract.js";
 
 type Message = {
@@ -22,6 +25,19 @@ export default function ChatPage() {
   const [image, setImage] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const { user } = useAuth();
+  const router = useRouter();
+
+  if (user?.role === "admin") {
+    router.push("/admin");
+    Swal.fire({
+      icon: "error",
+      title: "Failed",
+      text: "You have to logout for guest access.",
+      confirmButtonColor: "#d33",
+    });
+    return;
+  }
 
   // Auto scroll ke bawah tiap ada message baru
   useEffect(() => {
@@ -155,6 +171,7 @@ export default function ChatPage() {
       {/* Input Area */}
       <div className="flex items-center gap-2">
         <Textarea
+          className="bg-gray-50"
           placeholder="Ask something about this book..."
           value={input}
           onChange={(e) => setInput(e.target.value)}

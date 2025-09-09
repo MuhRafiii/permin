@@ -1,39 +1,48 @@
 "use client";
 
-import Navbar from "@/components/Navbar";
 import api from "@/services/api";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
-export default function UserLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+}
+
+interface AuthContextProps {
+  user: User | null;
+  loading: boolean;
+  login: (user: User) => void;
+  logout: () => void;
+}
+
+const AuthContext = createContext<AuthContextProps | undefined>(undefined);
+
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    const getUserData = async () => {
+    const fetchUser = async () => {
       try {
         const res = await api.get("/");
-        const userData = res.data.data;
-
-        if (userData) {
-          setIsLoggedIn(true);
-        }
-      } catch (error) {
-        console.error(error);
-        router.push("/auth/login");
+        setUser(res.data.data);
+      } catch (err) {
+        setUser(null);
       } finally {
         setLoading(false);
       }
     };
-
-    getUserData();
+    fetchUser();
   }, []);
+
+  const login = (user: User) => {
+    setUser(user);
+  };
 
   const logout = async () => {
     Swal.fire({
@@ -49,12 +58,8 @@ export default function UserLayout({
       if (result.isConfirmed) {
         try {
           await api.post("/auth/logout");
-          setLoading(true);
-          setIsLoggedIn(false);
-          setTimeout(() => {
-            setLoading(false);
-          }, 500);
-          router.push("/user");
+          router.push("/");
+          setUser(null);
 
           Swal.fire({
             title: "Logout Successful",
@@ -75,15 +80,14 @@ export default function UserLayout({
   };
 
   return (
-    <>
-      <Navbar isLoggedIn={isLoggedIn} onLogout={logout} />
-      {loading ? (
-        <div className="flex justify-center items-center p-10">
-          <p className="text-lg text-center text-gray-400 italic">Loading...</p>
-        </div>
-      ) : (
-        <main>{children}</main>
-      )}
-    </>
+    <AuthContext.Provider value={{ user, loading, login, logout }}>
+      {children}
+    </AuthContext.Provider>
   );
-}
+};
+
+export const useAuth = () => {
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error("useAuth must be used inside AuthProvider");
+  return ctx;
+};
