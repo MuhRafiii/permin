@@ -30,7 +30,7 @@ export const BorrowingCard = ({ borrow }: { borrow: any }) => {
           </p>
           <Button
             size="sm"
-            onClick={() => router.push(`/user/book-detail/${borrow.books.id}`)}
+            onClick={() => router.push(`/book-detail/${borrow.books.id}`)}
           >
             Book Detail
           </Button>

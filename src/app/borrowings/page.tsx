@@ -42,10 +42,8 @@ export default function UserBorrowings() {
   const historyBorrowings = borrowings.filter((b) => b.returned_at !== null);
 
   return (
-    <div className="p-4 lg:p-8">
-      {loading && (
-        <p className="h-screen text-center text-gray-400 mt-10">Loading...</p>
-      )}
+    <div className="h-screen p-4 lg:p-8">
+      {loading && <p className="text-center text-gray-400 mt-10">Loading...</p>}
 
       {/* Buku yang sedang dipinjam */}
       <section className="mb-10">

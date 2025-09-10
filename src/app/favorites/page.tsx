@@ -120,7 +120,7 @@ export default function BooksPage() {
                         "https://res.cloudinary.com/dxlevzn3n/image/upload/v1755059566/placeholder_surqve.png"
                       }
                       alt={book.title}
-                      className="w-full h-48 object-cover rounded-md"
+                      className="w-full h-96 object-cover rounded-md"
                     />
                     <CardTitle className="mt-2">{book.title}</CardTitle>
                   </CardHeader>
